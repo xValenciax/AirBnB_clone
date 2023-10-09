@@ -1,0 +1,4 @@
+./update.sh
+__pycache__
+*.pyc
+*~
