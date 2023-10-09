@@ -10,6 +10,7 @@ class HBNBCommand(cmd.Cmd):
     prompt = '(hbnb) '
 
     def do_EOF(self, line):
+        """Exits the program when ctrl-D is pressed"""
         return True
 
     def do_quit(self, line):
