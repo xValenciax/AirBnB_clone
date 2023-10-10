@@ -36,11 +36,7 @@ class HBNBCommand(cmd.Cmd):
         Ex: $ create BaseModel
         """
         args = line.split()
-        if not args:
-            print("** class name missing **")
-            return
-        if args[0] not in self.__available_models.keys():
-            print("** class doesn't exist **")
+        if not validate_args(args, self.__available_models):
             return
 
         new_instance = self.__available_models[line]
@@ -53,21 +49,11 @@ class HBNBCommand(cmd.Cmd):
         Ex: $ show BaseModel 1234-1234-1234
         """
         args = line.split()
-        if not args:
-            print("** class name missing **")
-            return
-        if args[0] not in self.__available_models.keys():
-            print("** class doesn't exist **")
-            return
-        if len(args) < 2 or not args[1]:
-            print("** instance id missing **")
+        if not validate_args(args, self.__available_models,
+                             self.__saved_keys, check_id=True):
             return
 
         instance_key = f'{args[0]}.{args[1]}'
-        if instance_key not in self.__saved_keys:
-            print("** no instance found **")
-            return
-
         print(self.__saved_objects[instance_key])
 
     def do_destroy(self, line):
@@ -77,21 +63,11 @@ class HBNBCommand(cmd.Cmd):
         Ex: $ destroy BaseModel 1234-1234-1234
         """
         args = line.split()
-        if not args:
-            print("** class name missing **")
-            return
-        if args[0] not in self.__available_models.keys():
-            print("** class doesn't exist **")
-            return
-        if len(args) < 2 or not args[1]:
-            print("** instance id missing **")
+        if not validate_args(args, self.__available_models,
+                             self.__saved_keys, check_id=True):
             return
 
         instance_key = f'{args[0]}.{args[1]}'
-        if instance_key not in self.__saved_keys:
-            print("** no instance found **")
-            return
-
         del self.__saved_objects[instance_key]
         storage.save()
 
@@ -121,26 +97,11 @@ class HBNBCommand(cmd.Cmd):
         Ex: $ update BaseModel 1234-1234-1234
         """
         args = line.split()[:4]
-        if not args:
-            print("** class name missing **")
-            return
-        if args[0] not in self.__available_models.keys():
-            print("** class doesn't exist **")
-            return
-        if len(args) < 2 or not args[1]:
-            print("** instance id missing **")
+        if not validate_args(args, self.__available_models,
+                             self.__saved_keys, check_id=True, check_attrs=True):
             return
 
         instance_key = f'{args[0]}.{args[1]}'
-        if instance_key not in self.__saved_keys:
-            print("** no instance found **")
-            return
-        if len(args) < 3 or not args[2]:
-            print("** attribute name missing **")
-            return
-        if len(args) < 4 or not args[3]:
-            print("** value missing **")
-            return
 
         args_no_quotes = re.sub('"', "", args[3])
         try:
@@ -153,6 +114,32 @@ class HBNBCommand(cmd.Cmd):
 
         self.__saved_objects[instance_key].__dict__[args[2]] = args_no_quotes
         storage.save()
+
+
+def validate_args(args, models, saved_keys=None, check_id=False, check_attrs=False):
+    if not args:
+        print("** class name missing **")
+        return False
+    if args[0] not in models:
+        print("** class doesn't exist **")
+        return False
+
+    if check_id:
+        instance_key = f'{args[0]}.{args[1]}'
+        if len(args) < 2 or not args[1]:
+            print("** instance id missing **")
+            return False
+        if instance_key not in saved_keys:
+            print("** no instance found **")
+            return False
+    if check_attrs:
+        if len(args) < 3 or not args[2]:
+            print("** attribute name missing **")
+            return False
+        if len(args) < 4 or not args[3]:
+            print("** value missing **")
+            return False
+    return True
 
 
 if __name__ == '__main__':
