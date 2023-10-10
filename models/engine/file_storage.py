@@ -2,6 +2,7 @@
 """Defines the FileStorage class."""
 
 import json
+from models.base_model import BaseModel
 
 
 class FileStorage:
@@ -11,7 +12,7 @@ class FileStorage:
         __file_path (str): The name of the file to save objects to.
         __objects (dict): A dictionary of instantiated objects.
     """
-    __file_path = "file.json"
+    __file_path = "storage.json"
     __objects = {}
 
     def all(self):
@@ -20,24 +21,29 @@ class FileStorage:
 
     def new(self, obj):
         """Set in __objects obj with key <obj_class_name>.id"""
-        ocname = obj.__class__.__name__
-        FileStorage.__objects["{}.{}".format(ocname, obj.id)] = obj
+        obj_class_name = obj.__class__.__name__
+        FileStorage.__objects[f"{obj_class_name}.{obj.id}"] = obj
 
     def save(self):
         """Serialize __objects to the JSON file __file_path."""
-        odict = FileStorage.__objects
-        objdict = {obj: odict[obj].to_dict() for obj in odict.keys()}
+        saved_objs_dict = FileStorage.__objects
+        objs_dict = {obj: saved_objs_dict[obj].to_dict()
+                     for obj in saved_objs_dict.keys()}
+
         with open(FileStorage.__file_path, "w") as f:
-            json.dump(objdict, f)
+            json.dump(objs_dict, f)
 
     def reload(self):
         """Deserialize the JSON file __file_path to __objects, if it exists."""
+        available_models = {'BaseModel': BaseModel(), 'User': None, 'State': None,
+                            'City': None, 'Amenity': None, 'Place': None, 'Review': None}
+
         try:
             with open(FileStorage.__file_path) as f:
-                objdict = json.load(f)
-                for o in objdict.values():
+                obj_dict = json.load(f)
+                for o in obj_dict.values():
                     cls_name = o["__class__"]
                     del o["__class__"]
-                    self.new(eval(cls_name)(**o))
+                    self.new(available_models[cls_name])
         except FileNotFoundError:
             return
