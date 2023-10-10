@@ -5,7 +5,7 @@
 import cmd
 import json
 from models.base_model import BaseModel
-from models.engine.file_storage import FileStorage
+from models import storage
 
 
 class HBNBCommand(cmd.Cmd):
@@ -15,8 +15,7 @@ class HBNBCommand(cmd.Cmd):
     __available_models = {'BaseModel': BaseModel(), 'User': None, 'State': None,
                           'City': None, 'Amenity': None, 'Place': None, 'Review': None}
 
-    __storage = FileStorage()
-    __saved_objects = __storage.all()
+    __saved_objects = storage.all()
     __saved_keys = __saved_objects.keys()
 
     def do_EOF(self, line):
@@ -94,7 +93,7 @@ class HBNBCommand(cmd.Cmd):
             return
 
         del self.__saved_objects[instance_key]
-        self.__storage.save()
+        storage.save()
 
     def do_all(self, line):
         """
@@ -154,7 +153,7 @@ class HBNBCommand(cmd.Cmd):
             pass
 
         self.__saved_objects[instance_key].__dict__[args[2]] = args[3]
-        self.__saved_objects[instance_key].save()
+        storage.save()
 
 
 if __name__ == '__main__':
