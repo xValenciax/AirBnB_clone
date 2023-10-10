@@ -5,6 +5,7 @@
 import cmd
 from models.base_model import BaseModel
 from models import storage
+from models.user import User
 import re
 
 
@@ -12,11 +13,8 @@ class HBNBCommand(cmd.Cmd):
     """Class that represents the HBNB command line interpreter."""
     prompt = '(hbnb) '
 
-    __available_models = {'BaseModel': BaseModel(), 'User': None, 'State': None,
+    __available_models = {'BaseModel': BaseModel, 'User': User, 'State': None,
                           'City': None, 'Amenity': None, 'Place': None, 'Review': None}
-
-    __saved_objects = storage.all()
-    __saved_keys = __saved_objects.keys()
 
     def do_EOF(self, line):
         """Exits the program when ctrl-D is pressed."""
@@ -36,10 +34,10 @@ class HBNBCommand(cmd.Cmd):
         Ex: $ create BaseModel
         """
         args = line.split()
-        if not validate_args(args, self.__available_models):
+        if not validate_args(args, HBNBCommand.__available_models):
             return
 
-        new_instance = self.__available_models[line]
+        new_instance = HBNBCommand.__available_models[line]()
         new_instance.save()
         print(new_instance.id)
 
@@ -49,12 +47,13 @@ class HBNBCommand(cmd.Cmd):
         Ex: $ show BaseModel 1234-1234-1234
         """
         args = line.split()
-        if not validate_args(args, self.__available_models,
-                             self.__saved_keys, check_id=True):
+        saved_objects, _ = get_saved_objs()
+        if not validate_args(args, HBNBCommand.__available_models,
+                             HBNBCommand.__saved_keys, check_id=True):
             return
 
         instance_key = f'{args[0]}.{args[1]}'
-        print(self.__saved_objects[instance_key])
+        print(saved_objects[instance_key])
 
     def do_destroy(self, line):
         """
@@ -63,12 +62,13 @@ class HBNBCommand(cmd.Cmd):
         Ex: $ destroy BaseModel 1234-1234-1234
         """
         args = line.split()
-        if not validate_args(args, self.__available_models,
-                             self.__saved_keys, check_id=True):
+        saved_objects, saved_keys = get_saved_objs()
+        if not validate_args(args, HBNBCommand.__available_models,
+                             saved_keys, check_id=True):
             return
 
         instance_key = f'{args[0]}.{args[1]}'
-        del self.__saved_objects[instance_key]
+        del saved_objects[instance_key]
         storage.save()
 
     def do_all(self, line):
@@ -77,16 +77,17 @@ class HBNBCommand(cmd.Cmd):
         Ex: $ all BaseModel or $ all
         """
         args = line.split() if line is not None else None
-        if args and args[0] not in self.__available_models.keys():
+        saved_objects, saved_keys = get_saved_objs()
+        if args and args[0] not in HBNBCommand.__available_models.keys():
             print("** class doesn't exist **")
             return
         objects_list = []
         if args:
-            objects_list = [str(self.__saved_objects[key])
-                            for key in self.__saved_keys if str(key).__contains__(args[0])]
+            objects_list = [str(saved_objects[key])
+                            for key in saved_keys if str(key).__contains__(args[0])]
         else:
-            objects_list = [str(self.__saved_objects[key])
-                            for key in self.__saved_keys]
+            objects_list = [str(saved_objects[key])
+                            for key in saved_keys]
 
         print(objects_list)
 
@@ -97,8 +98,9 @@ class HBNBCommand(cmd.Cmd):
         Ex: $ update BaseModel 1234-1234-1234
         """
         args = line.split()[:4]
-        if not validate_args(args, self.__available_models,
-                             self.__saved_keys, check_id=True, check_attrs=True):
+        saved_objects, saved_keys = get_saved_objs()
+        if not validate_args(args, HBNBCommand.__available_models,
+                             saved_keys, check_id=True, check_attrs=True):
             return
 
         instance_key = f'{args[0]}.{args[1]}'
@@ -112,8 +114,14 @@ class HBNBCommand(cmd.Cmd):
         except ValueError:
             pass
 
-        self.__saved_objects[instance_key].__dict__[args[2]] = args_no_quotes
+        saved_objects[instance_key].__dict__[args[2]] = args_no_quotes
         storage.save()
+
+
+def get_saved_objs():
+    saved_objects = storage.all()
+    saved_keys = saved_objects.keys()
+    return (saved_objects, saved_keys)
 
 
 def validate_args(args, models, saved_keys=None, check_id=False, check_attrs=False):

@@ -3,6 +3,7 @@
 
 import json
 from models.base_model import BaseModel
+from models.user import User
 
 
 class FileStorage:
@@ -35,15 +36,16 @@ class FileStorage:
 
     def reload(self):
         """Deserialize the JSON file __file_path to __objects, if it exists."""
-        available_models = {'BaseModel': BaseModel(), 'User': None, 'State': None,
+        available_models = {'BaseModel': BaseModel, 'User': User, 'State': None,
                             'City': None, 'Amenity': None, 'Place': None, 'Review': None}
 
         try:
-            with open(FileStorage.__file_path) as f:
+            with open(FileStorage.__file_path, 'r') as f:
+                print("okay")
                 obj_dict = json.load(f)
                 for o in obj_dict.values():
                     cls_name = o["__class__"]
                     del o["__class__"]
-                    self.new(available_models[cls_name])
-        except FileNotFoundError:
+                    self.new(available_models[cls_name](**o))
+        except (FileNotFoundError, FileExistsError):
             return
