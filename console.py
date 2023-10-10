@@ -5,6 +5,7 @@
 import cmd
 from models.base_model import BaseModel
 from models import storage
+import re
 
 
 class HBNBCommand(cmd.Cmd):
@@ -141,17 +142,16 @@ class HBNBCommand(cmd.Cmd):
             print("** value missing **")
             return
 
+        args_no_quotes = re.sub('"', "", args[3])
         try:
-            if args[3].isdigit():
-                args[3] = int(args[3])
-            elif float(args[3]):
-                args[3] = float(args[3])
-            else:
-                args[3] = str(args[3])
+            if args_no_quotes.isdigit():
+                args_no_quotes = int(args_no_quotes)
+            elif float(args_no_quotes):
+                args_no_quotes = float(args_no_quotes)
         except ValueError:
             pass
 
-        self.__saved_objects[instance_key].__dict__[args[2]] = args[3]
+        self.__saved_objects[instance_key].__dict__[args[2]] = args_no_quotes
         storage.save()
 
 
