@@ -126,12 +126,14 @@ class HBNBCommand(cmd.Cmd):
 
 
 def get_saved_objs():
+    """returns all the previously saved objects and their keys"""
     saved_objects = storage.all()
     saved_keys = saved_objects.keys()
     return (saved_objects, saved_keys)
 
 
 def validate_args(args, models, saved_keys=None, check_id=False, check_attrs=False):
+    """validates the arguments passed to each command"""
     if not args:
         print("** class name missing **")
         return False
