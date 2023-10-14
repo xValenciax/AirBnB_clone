@@ -3,15 +3,12 @@
 
 import json
 from models.base_model import BaseModel
-<<<<<<< HEAD
-=======
 from models.user import User
 from models.state import State
 from models.city import City
 from models.place import Place
 from models.amenity import Amenity
 from models.review import Review
->>>>>>> 80f2499fb9f2a7bdb9a3d4c60e5b44518c39a2bd
 
 
 class FileStorage:
@@ -44,13 +41,8 @@ class FileStorage:
 
     def reload(self):
         """Deserialize the JSON file __file_path to __objects, if it exists."""
-<<<<<<< HEAD
-        available_models = {'BaseModel': BaseModel, 'User': None, 'State': None,
-                            'City': None, 'Amenity': None, 'Place': None, 'Review': None}
-=======
         available_models = {'BaseModel': BaseModel, 'User': User, 'State': State,
                             'City': City, 'Amenity': Amenity, 'Place': Place, 'Review': Review}
->>>>>>> 80f2499fb9f2a7bdb9a3d4c60e5b44518c39a2bd
 
         try:
             with open(FileStorage.__file_path, 'r') as f:
