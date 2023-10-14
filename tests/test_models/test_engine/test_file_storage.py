@@ -46,18 +46,18 @@ class TestFileStorage_methods(unittest.TestCase):
     @classmethod
     def setUp(self):
         try:
-            os.rename("file.json", "tmp")
+            os.rename("storage.json", "tmp")
         except IOError:
             pass
 
     @classmethod
     def tearDown(self):
         try:
-            os.remove("file.json")
+            os.remove("storage.json")
         except IOError:
             pass
         try:
-            os.rename("tmp", "file.json")
+            os.rename("tmp", "storage.json")
         except IOError:
             pass
         FileStorage._FileStorage__objects = {}
@@ -120,7 +120,7 @@ class TestFileStorage_methods(unittest.TestCase):
         models.storage.new(rv)
         models.storage.save()
         save_text = ""
-        with open("file.json", "r") as f:
+        with open("storage.json", "r") as f:
             save_text = f.read()
             self.assertIn("BaseModel." + bm.id, save_text)
             self.assertIn("User." + us.id, save_text)
