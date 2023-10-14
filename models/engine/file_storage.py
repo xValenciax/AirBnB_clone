@@ -40,13 +40,20 @@ class FileStorage:
             json.dump(objs_dict, f)
 
     def reload(self):
-        """Deserialize the JSON file __file_path to __objects, if it exists."""
-        available_models = {'BaseModel': BaseModel, 'User': User, 'State': State,
-                            'City': City, 'Amenity': Amenity, 'Place': Place, 'Review': Review}
+        """Deserialize the JSON file
+        __file_path to __objects, if it exists."""
+        available_models = {
+            'BaseModel': BaseModel,
+            'User': User,
+            'State': State,
+            'City': City,
+            'Amenity': Amenity,
+            'Place': Place,
+            'Review': Review
+        }
 
         try:
             with open(FileStorage.__file_path, 'r') as f:
-                print("okay")
                 obj_dict = json.load(f)
                 for o in obj_dict.values():
                     cls_name = o["__class__"]
