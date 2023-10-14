@@ -5,7 +5,6 @@
 import cmd
 from models.base_model import BaseModel
 from models import storage
-from models.user import User
 import re
 
 
@@ -13,7 +12,7 @@ class HBNBCommand(cmd.Cmd):
     """Class that represents the HBNB command line interpreter."""
     prompt = '(hbnb) '
 
-    __available_models = {'BaseModel': BaseModel, 'User': User, 'State': None,
+    __available_models = {'BaseModel': BaseModel, 'User': None, 'State': None,
                           'City': None, 'Amenity': None, 'Place': None, 'Review': None}
 
     def do_EOF(self, line):

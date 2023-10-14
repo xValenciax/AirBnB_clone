@@ -3,7 +3,6 @@
 
 import json
 from models.base_model import BaseModel
-from models.user import User
 
 
 class FileStorage:
@@ -36,7 +35,7 @@ class FileStorage:
 
     def reload(self):
         """Deserialize the JSON file __file_path to __objects, if it exists."""
-        available_models = {'BaseModel': BaseModel, 'User': User, 'State': None,
+        available_models = {'BaseModel': BaseModel, 'User': None, 'State': None,
                             'City': None, 'Amenity': None, 'Place': None, 'Review': None}
 
         try:
