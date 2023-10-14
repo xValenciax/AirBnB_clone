@@ -4,16 +4,25 @@
 
 import cmd
 from models.base_model import BaseModel
-from models import storage
+from models import storage 80f2499fb9f2a7bdb9a3d4c60e5b44518c39a2bd
 import re
+from models import storage
+from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.city import City
+from models.place import Place
+from models.amenity import Amenity
+from models.review import Review
 
 
 class HBNBCommand(cmd.Cmd):
     """Class that represents the HBNB command line interpreter."""
     prompt = '(hbnb) '
 
-    __available_models = {'BaseModel': BaseModel, 'User': None, 'State': None,
-                          'City': None, 'Amenity': None, 'Place': None, 'Review': None}
+
+    __available_models = {'BaseModel': BaseModel, 'User': User, 'State': State,
+                          'City': City, 'Amenity': Amenity, 'Place': Place, 'Review': Review}
 
     def do_EOF(self, line):
         """Exits the program when ctrl-D is pressed."""
