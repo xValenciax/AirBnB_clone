@@ -4,7 +4,7 @@
 
 import cmd
 from models.base_model import BaseModel
-from models import storage 80f2499fb9f2a7bdb9a3d4c60e5b44518c39a2bd
+from models import storage
 import re
 from models import storage
 from models.base_model import BaseModel
@@ -19,7 +19,6 @@ from models.review import Review
 class HBNBCommand(cmd.Cmd):
     """Class that represents the HBNB command line interpreter."""
     prompt = '(hbnb) '
-
 
     __available_models = {'BaseModel': BaseModel, 'User': User, 'State': State,
                           'City': City, 'Amenity': Amenity, 'Place': Place, 'Review': Review}
