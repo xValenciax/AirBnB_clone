@@ -33,26 +33,27 @@
 	opacity: 90%;
 }
 
+.locations {
+	border-right: 1px #ddd solid;
+}
+
 .locations,
 .amenities {
 	display: inline-block;
 	height: 100%;
 	width: 25%;
 	line-height: 50%;
-	padding-left: 50px;
 }
 
 .locations h3,
 .amenities h3 {
 	font-weight: 600;
+	margin-left: 50px;
 }
 
 .locations h4,
 .amenities h4 {
 	font-weight: 400;
 	font-size: 14px;
-}
-
-.locations {
-	border-right: 1px #ddd solid;
+	margin-left: 50px;
 }
