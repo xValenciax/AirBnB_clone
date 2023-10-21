@@ -11,7 +11,7 @@
 	-o-border-radius: 4px;
 }
 
-.filters button {
+button {
 	position: absolute;
 	right: 30px;
 	top: 50%;
@@ -24,6 +24,6 @@
 	border-radius: 4px;
 }
 
-.filters button:hover {
+button:hover {
 	opacity: 90%;
 }
