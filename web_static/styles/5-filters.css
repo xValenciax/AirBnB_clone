@@ -45,14 +45,12 @@
 	line-height: 50%;
 }
 
-.locations h3,
-.amenities h3 {
+h3 {
 	font-weight: 600;
 	margin-left: 50px;
 }
 
-.locations h4,
-.amenities h4 {
+h4 {
 	font-weight: 400;
 	font-size: 14px;
 	margin-left: 50px;
