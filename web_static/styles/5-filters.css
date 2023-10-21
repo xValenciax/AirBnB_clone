@@ -18,10 +18,10 @@
 
 .locations,
 .amenities {
-	display: inline-block;
 	height: 100%;
 	width: 25%;
 	line-height: 50%;
+	float: left;
 }
 
 h3 {
